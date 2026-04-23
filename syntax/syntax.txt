@@ -1,0 +1,28 @@
+function defining:
+funcKeyword funcName(parameters) : returnType { code }
+
+function declaring (optional): 
+funcKeyword funcName(parameters);
+
+variable defining:
+varKeyword varName : varType = value;
+
+variable declaring:
+varKeyword varName : varType;
+
+operators (for now):
++, -, /, *, ==, !=, <, >, <=, >=
+
+terms:
+chr = 'c'
+str = "string"
+num = 1234
+f32 = 1.0f
+f64 = 1.0d
+
+types:
+
+primitive types:
+chr, str, num, f32, f64 
+referenced types:
+array
