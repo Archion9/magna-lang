@@ -1,2 +1,4 @@
-if (1 = 4)
-return 3
+if (1 == 4){
+    f64 ez = 1;
+    return 3;
+}
