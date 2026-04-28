@@ -179,6 +179,10 @@ scan_symbol :: proc(l: ^Lexer, c: u8) {
             } else {
                 appendToken(l, .EQUALS, "=");
             }
+        case '+':
+            appendToken(l, .PLUS, "+");
+        case '*':
+            appendToken(l, .STAR, "*");
         case ';':
             appendToken(l, .SEMICOLON, ";");
         case:
