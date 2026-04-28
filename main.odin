@@ -7,7 +7,8 @@ import "core:sys/windows"
 Help := []string {
     "Magna Language Compiler\n\n",
     "\t-help -- Information about the compiler\n",
-    "\t-version -- Version number of the magna"
+    "\t-version -- Version number of the magna",
+    "\t-build [file] -- tokenizing the test.mag for now"
 };
 
 
@@ -21,11 +22,12 @@ main :: proc(){
         fmt.println("Error: no arguments taken");
         return;
     }
+    
     switch args[1]{
         case "-help": for x in Help {
              fmt.print(x);
         };
-        case "-build": a : []Token = lexer(readFile("test.mag"));
+        case "-build": a : []Token = lexing(readFile("test.mag"));
         for t in a{
             fmt.printfln("%v %s", t.type, t.value);
         }
