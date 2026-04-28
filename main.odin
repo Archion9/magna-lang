@@ -27,10 +27,52 @@ main :: proc(){
         case "-help": for x in Help {
              fmt.print(x);
         };
-        case "-build": a : []Token = lexing(readFile("test.mag"));
+        case "-build": a : []Stmt = parse(lexing(readFile("test.mag")));
         for t in a{
-            fmt.printfln("%v %s", t.type, t.value);
+            stmtPrint(t);
         }
         case: fmt.println("Unknown argument"); 
+    }
+}
+stmtPrint :: proc(s: Stmt) {
+    switch _ in s {
+        case PrintStmt:
+            fmt.print("PrintStmt(");
+            print_expr(s.(PrintStmt).value);
+            fmt.println(")");
+
+        case ReturnStmt:
+            fmt.print("ReturnStmt(");
+            print_expr(s.(ReturnStmt).value);
+            fmt.println(")");
+    }
+}
+print_expr :: proc(e: ^Expr) {
+    switch _ in e^ {
+        case NumberLiteral:
+            fmt.print(e.(NumberLiteral).value);
+
+        case IdentifierExpr:
+            fmt.print(e.(IdentifierExpr).name);
+
+        case BinaryExpr:
+            fmt.print("(");
+            print_expr(e.(BinaryExpr).left);
+            fmt.print(" ");
+            fmt.print(token_to_string(e.(BinaryExpr).operator));
+            fmt.print(" ");
+            print_expr(e.(BinaryExpr).right);
+            fmt.print(")");
+    }
+}
+
+token_to_string :: proc(t: TokenType) -> string {
+    #partial switch t {
+    case .PLUS:  return "+";
+    case .MINUS: return "-";
+    case .STAR:  return "*";
+    case .SLASH: return "/";
+    case:
+        return "?";
     }
 }
