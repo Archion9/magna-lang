@@ -27,9 +27,18 @@ main :: proc(){
         case "-help": for x in Help {
              fmt.print(x);
         };
-        case "-build": a : []Stmt = parse(lexing(readFile("test.mag")));
-        for t in a{
-            stmtPrint(t);
+        case "-build": 
+        tokens : []Token = lexing(readFile("test.mag"));
+        for t in tokens{
+            fmt.print(t.type);
+            fmt.print(" ");
+            
+            fmt.println(t.value);
+            
+        }
+        statements : []Stmt = parse(tokens);
+        for s in statements{
+            stmtPrint(s);
         }
         case: fmt.println("Unknown argument"); 
     }
@@ -45,6 +54,17 @@ stmtPrint :: proc(s: Stmt) {
             fmt.print("ReturnStmt(");
             print_expr(s.(ReturnStmt).value);
             fmt.println(")");
+        case IfStmt:
+            fmt.print("IfStmt(");
+            print_expr(s.(IfStmt).condition);
+            fmt.println(") {");
+            for stmt in s.(IfStmt).body {
+                stmtPrint(stmt);
+            }
+
+            fmt.println("}");
+
+        case: fmt.println("BASZD MEG ANYÁD");
     }
 }
 print_expr :: proc(e: ^Expr) {
@@ -72,6 +92,7 @@ token_to_string :: proc(t: TokenType) -> string {
     case .MINUS: return "-";
     case .STAR:  return "*";
     case .SLASH: return "/";
+    case .EQUAL_EQUAL: return "==";
     case:
         return "?";
     }
