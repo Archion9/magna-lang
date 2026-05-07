@@ -40,6 +40,23 @@ main :: proc(){
         for s in statements{
             stmtPrint(s);
         }
+        fmt.println();
+        for &s in statements {
+            analyze_stmt(&s);   
+        }
+        cg : Codegen;
+        file, err := os.create("output.ll");
+        if err != nil {
+            fmt.println("Failed to create file");
+            os.exit(1);
+        }
+        cg.output = file;
+        fmt.fprintln(cg.output, "define i32 @main() {");
+        fmt.fprintln(cg.output, "entry:");
+        for s in statements{
+            gen_stmt(&cg, s);
+        }
+        fmt.fprintln(cg.output, "}");
         case: fmt.println("Unknown argument"); 
     }
 }
@@ -64,7 +81,7 @@ stmtPrint :: proc(s: Stmt) {
 
             fmt.println("}");
 
-        case: fmt.println("BASZD MEG ANYÁD");
+        case: fmt.println("Nem látom mit jelent");
     }
 }
 print_expr :: proc(e: ^Expr) {
