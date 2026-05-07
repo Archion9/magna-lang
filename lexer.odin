@@ -1,7 +1,6 @@
 package Magna_Compiler
 
 import "core:os"
-import "core:strings"
 import "core:fmt"
 
 TokenType :: enum{
@@ -30,9 +29,9 @@ TokenType :: enum{
     /* Keywords */
     RETURN,
     IF,
-    FLOAT_32,
-    FLOAT_64,
-    INTEGER,
+    FLOAT_32, // f32
+    FLOAT_64, // f64
+    INTEGER, 
     PRINT,
 
     
@@ -75,7 +74,7 @@ lexing :: proc(rawData : []u8) -> []Token
 
     for l.pos < len(l.input){
         c := advance(&l);
-
+       
         if isWhiteSpace(c){
             continue;
         }
@@ -148,13 +147,15 @@ scanIdentifier :: proc (l : ^Lexer, start : int){
 
     switch value {
         case "return":
-            appendToken(l, .RETURN, value);
+            appendToken(l, .RETURN, "return");
         case "if":
-            appendToken(l, .IF, value);
+            appendToken(l, .IF, "if");
         case "f32":
             appendToken(l, .FLOAT_32, "f32");
         case "f64":
             appendToken(l, .FLOAT_64, "f64");
+        case "i64":
+            appendToken(l, .INTEGER, "i64");
         case "print":
             appendToken(l, .PRINT, "print"); 
         case:
