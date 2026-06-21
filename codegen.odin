@@ -42,6 +42,9 @@ gen_expr :: proc(cg: ^Codegen, e: ^Expr) -> string {
 
 gen_stmt :: proc(cg: ^Codegen, s: Stmt) {
     #partial switch _ in s {
+    case IfStmt:
+    
+    case PrintStmt:
 
     case ReturnStmt:
         value := gen_expr(cg, s.(ReturnStmt).value);

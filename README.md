@@ -7,6 +7,9 @@ We have classes and objects and composition and interfaces and that's it. No def
 
 # Compiler structure
 
-source -> lexer -> tokens -> parser -> Abstract tree -> semantic analysis -> Intermediate representation -> LLVM
+source -> lexer -> tokens -> parser -> Abstract tree -> semantic analysis -> code generation -> Intermediate representation -> LLVM -> executable
 
-# Usage for project
+# Requirements for the project
+- LLVM, CLang
+- Odin compiler
+- Makefile
