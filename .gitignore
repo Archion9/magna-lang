@@ -4,3 +4,4 @@
 *.ll
 *output
 *.o
+*.out
