@@ -9,7 +9,7 @@ Type :: enum {
 }
 
 analyze_expr :: proc (e : ^Expr) -> Type{
-    switch _ in e{
+    #partial switch _ in e{
         case NumberLiteral:
             return .INT;
         case IdentifierExpr:
