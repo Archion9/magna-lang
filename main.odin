@@ -45,19 +45,14 @@ main :: proc(){
             analyze_stmt(&s);   
         }
         cg : Codegen;
-        file, err := os.create("output.ll");
-        if err != nil {
+        file, err := os.create("test.asm");
+           if err != nil {
             fmt.println("Failed to create file");
             os.exit(1);
         }
         cg.output = file;
-        fmt.fprintln(cg.output, "define i32 @main() {");
-        fmt.fprintln(cg.output, "entry:");
-        for s in statements{
-            gen_stmt(&cg, s);
-        }
-        fmt.fprintln(cg.output, "}");
-        case: fmt.println("Unknown argument"); 
+        gen_code(&cg, statements);
+
     }
 }
 stmtPrint :: proc(s: Stmt) {
@@ -86,6 +81,8 @@ stmtPrint :: proc(s: Stmt) {
 }
 print_expr :: proc(e: ^Expr) {
     switch _ in e^ {
+        case StringLiteral:
+            fmt.print(e.(StringLiteral).value);
         case NumberLiteral:
             fmt.print(e.(NumberLiteral).value);
 
