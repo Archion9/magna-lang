@@ -1,5 +1,6 @@
 package Magna_Compiler
 
+import "core:strings"
 import "core:os"
 import "core:fmt"
 
@@ -29,6 +30,7 @@ TokenType :: enum{
     /* Keywords */
     RETURN,
     IF,
+    STRING, // str
     FLOAT_32, // f32
     FLOAT_64, // f64
     INTEGER, 
@@ -36,7 +38,7 @@ TokenType :: enum{
 
     
     // Literals
-    STRING,
+    STRING_LITERAL,
     IDENTIFIER,
     NUMBER,
 
@@ -80,12 +82,12 @@ lexing :: proc(rawData : []u8) -> []Token
         }
 
         if isDigit(c){
-            scanNumber(&l, l.pos-1);
+            scanNumber(&l, l.pos - 1);
             continue;
         }
 
         if isLetter(c){
-            scanIdentifier(&l, l.pos -1);
+            scanIdentifier(&l, l.pos - 1);
             continue;
         }
         scan_symbol(&l, c);
@@ -180,10 +182,29 @@ scan_symbol :: proc(l: ^Lexer, c: u8) {
             } else {
                 appendToken(l, .EQUALS, "=");
             }
+        case '"':
+            value : strings.Builder;
+            
+            for len(l.input) != l.pos && peek(l) != '"' {
+                strings.write_byte(&value, advance(l)); 
+            }
+            if len(l.input) == l.pos {
+                fmt.println("Error on lexer: Unterminated string literal");
+                os.exit(1);
+            }
+            // Nom nom " string sign
+            advance(l);
+
+            appendToken(l, .STRING_LITERAL, strings.to_string(value));
+
         case '+':
             appendToken(l, .PLUS, "+");
+        case '-':
+            appendToken(l, .MINUS, "-");
         case '*':
             appendToken(l, .STAR, "*");
+        case '/':
+            appendToken(l, .SLASH, "/");
         case ';':
             appendToken(l, .SEMICOLON, ";");
         case:
