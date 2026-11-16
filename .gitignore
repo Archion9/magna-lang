@@ -1,2 +1,9 @@
 *.exe
 *.json
+*.s
+*.ll
+*output
+*.o
+*.out
+*.asm
+*.mag

@@ -1,8 +1,8 @@
 function defining:
-funcKeyword funcName(parameters) : returnType { code }
+funcKeyword funcName(parameters) : [returnType] { code }
 
 function declaring (optional): 
-funcKeyword funcName(parameters);
+funcKeyword funcName(parameters) : [returnType];
 
 variable defining:
 varKeyword varName : varType = value;
@@ -26,3 +26,6 @@ primitive types:
 chr, str, num, f32, f64 
 referenced types:
 array
+
+keywords:
+if

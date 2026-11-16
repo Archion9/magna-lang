@@ -1,7 +1,7 @@
 package Magna_Compiler
 
-import "core:os"
 import "core:strings"
+import "core:os"
 import "core:fmt"
 
 TokenType :: enum{
@@ -30,14 +30,15 @@ TokenType :: enum{
     /* Keywords */
     RETURN,
     IF,
-    FLOAT_32,
-    FLOAT_64,
-    INTEGER,
+    STRING, // str
+    FLOAT_32, // f32
+    FLOAT_64, // f64
+    INTEGER, 
     PRINT,
 
     
     // Literals
-    STRING,
+    STRING_LITERAL,
     IDENTIFIER,
     NUMBER,
 
@@ -75,18 +76,18 @@ lexing :: proc(rawData : []u8) -> []Token
 
     for l.pos < len(l.input){
         c := advance(&l);
-
+       
         if isWhiteSpace(c){
             continue;
         }
 
         if isDigit(c){
-            scanNumber(&l, l.pos-1);
+            scanNumber(&l, l.pos - 1);
             continue;
         }
 
         if isLetter(c){
-            scanIdentifier(&l, l.pos -1);
+            scanIdentifier(&l, l.pos - 1);
             continue;
         }
         scan_symbol(&l, c);
@@ -148,13 +149,15 @@ scanIdentifier :: proc (l : ^Lexer, start : int){
 
     switch value {
         case "return":
-            appendToken(l, .RETURN, value);
+            appendToken(l, .RETURN, "return");
         case "if":
-            appendToken(l, .IF, value);
+            appendToken(l, .IF, "if");
         case "f32":
             appendToken(l, .FLOAT_32, "f32");
         case "f64":
             appendToken(l, .FLOAT_64, "f64");
+        case "i64":
+            appendToken(l, .INTEGER, "i64");
         case "print":
             appendToken(l, .PRINT, "print"); 
         case:
@@ -179,10 +182,29 @@ scan_symbol :: proc(l: ^Lexer, c: u8) {
             } else {
                 appendToken(l, .EQUALS, "=");
             }
+        case '"':
+            value : strings.Builder;
+            
+            for len(l.input) != l.pos && peek(l) != '"' {
+                strings.write_byte(&value, advance(l)); 
+            }
+            if len(l.input) == l.pos {
+                fmt.println("Error on lexer: Unterminated string literal");
+                os.exit(1);
+            }
+            // Nom nom " string sign
+            advance(l);
+
+            appendToken(l, .STRING_LITERAL, strings.to_string(value));
+
         case '+':
             appendToken(l, .PLUS, "+");
+        case '-':
+            appendToken(l, .MINUS, "-");
         case '*':
             appendToken(l, .STAR, "*");
+        case '/':
+            appendToken(l, .SLASH, "/");
         case ';':
             appendToken(l, .SEMICOLON, ";");
         case:

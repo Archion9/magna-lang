@@ -27,11 +27,32 @@ main :: proc(){
         case "-help": for x in Help {
              fmt.print(x);
         };
-        case "-build": a : []Stmt = parse(lexing(readFile("test.mag")));
-        for t in a{
-            stmtPrint(t);
+        case "-build": 
+        tokens : []Token = lexing(readFile("test.mag"));
+        for t in tokens{
+            fmt.print(t.type);
+            fmt.print(" ");
+            
+            fmt.println(t.value);
+            
         }
-        case: fmt.println("Unknown argument"); 
+        statements : []Stmt = parse(tokens);
+        for s in statements{
+            stmtPrint(s);
+        }
+        fmt.println();
+        for &s in statements {
+            analyze_stmt(&s);   
+        }
+        cg : Codegen;
+        file, err := os.create("test.asm");
+           if err != nil {
+            fmt.println("Failed to create file");
+            os.exit(1);
+        }
+        cg.output = file;
+        gen_code(&cg, statements);
+
     }
 }
 stmtPrint :: proc(s: Stmt) {
@@ -45,10 +66,23 @@ stmtPrint :: proc(s: Stmt) {
             fmt.print("ReturnStmt(");
             print_expr(s.(ReturnStmt).value);
             fmt.println(")");
+        case IfStmt:
+            fmt.print("IfStmt(");
+            print_expr(s.(IfStmt).condition);
+            fmt.println(") {");
+            for stmt in s.(IfStmt).body {
+                stmtPrint(stmt);
+            }
+
+            fmt.println("}");
+
+        case: fmt.println("Nem látom mit jelent");
     }
 }
 print_expr :: proc(e: ^Expr) {
     switch _ in e^ {
+        case StringLiteral:
+            fmt.print(e.(StringLiteral).value);
         case NumberLiteral:
             fmt.print(e.(NumberLiteral).value);
 
@@ -72,6 +106,7 @@ token_to_string :: proc(t: TokenType) -> string {
     case .MINUS: return "-";
     case .STAR:  return "*";
     case .SLASH: return "/";
+    case .EQUAL_EQUAL: return "==";
     case:
         return "?";
     }
