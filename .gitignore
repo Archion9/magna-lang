@@ -5,3 +5,5 @@
 *output
 *.o
 *.out
+*.asm
+*.mag
