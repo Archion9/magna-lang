@@ -29,9 +29,14 @@ IfStmt :: struct{
 
 Expr :: union {
     NumberLiteral,
+    StringLiteral,
     IdentifierExpr,
     BinaryExpr,
 }
+StringLiteral :: struct{
+    value: string,
+}
+
 NumberLiteral :: struct {
     value: string,
 }
@@ -195,8 +200,14 @@ parse_primary :: proc(p: ^Parser) -> ^Expr {
         case .EQUAL_EQUAL:
             expr := parse_expression(p);
             return expr;
+        case .STRING_LITERAL:
+            expr := new(Expr)
+            expr^ = StringLiteral{
+                value = t.value,
+            };
+            return expr;
         case:
-            fmt.println("Uexpected primary token:", t.value);
+            fmt.println("Parser error, Unexpected primary token:", t.value);
             os.exit(1);
     }
 }
