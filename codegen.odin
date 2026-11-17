@@ -130,7 +130,7 @@ gen_code :: proc(cg: ^Codegen, statements: []Stmt){
 
     // Epilogue
     emit(cg, ".Lmain_epilogue:")
-    emit(cg, "\tlea rsp, [rbp]")
+    emit(cg, "\tmov rsp, rbp")
     emit(cg, "\tpop rbp")
     emit(cg, "\tret")
     emit(cg, ".seh_endproc")
