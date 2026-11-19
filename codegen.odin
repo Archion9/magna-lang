@@ -134,19 +134,5 @@ gen_code :: proc(cg: ^Codegen, statements: []Stmt){
     emit(cg, "\tpop rbp")
     emit(cg, "\tret")
     emit(cg, ".seh_endproc")
-    // emit(cg, ".intel_syntax noprefix");
-
-    // emit(cg, ".global main");
-    // emit(cg, ".section .rdata");
-    // emit(cg, "fmt:");
-    // emit(cg, "\t.asciz \"%d\\n\"");
-    // emit(cg, ".extern printf")
-
-    // emit(cg, "main:");
-    
-
-    // for s in statements {
-    //     gen_stmt(cg, s);
-    // }
 
 }
